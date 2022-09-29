@@ -1,0 +1,113 @@
+Metadata-Version: 2.1
+Name: deezersdk
+Version: 0.18
+Summary: A python SDK for the Deezer API
+Home-page: https://github.com/AlexisGomes/deezersdk
+Author: Gomes Alexis
+Author-email: alexis.gomes19@gmail.com
+License: UNKNOWN
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Description-Content-Type: text/markdown
+
+This is a python sdk to manipulate the deezer's API
+
+# Installation
+
+```bash
+pip install deezersdk
+```
+
+# Import
+
+```bash
+import deezersdk
+```
+
+# Authentication to the API
+- You need to have a Deezer account to use the API.
+
+- You have to go on https://developers.deezer.com/myapps and create an a new app 
+
+- You will need, your Application ID, Secret Key and the Redirect URL.
+
+- First we use the `get_oauth_login_url` method to get a login url
+    ```bash
+    url = Deezer.get_oauth_login_url(
+        app_id=DEEZER_APP_ID, 
+        redirect_uri=DEEZER_REDIRECT_URI
+    )
+    ```
+- We have to go the url (if the pop up will open and we will be able to login to your deezer account.)
+
+- You will then be redirected to your redirect url with an authorization code in your url.
+
+- With this code you can, request your access token 
+    ```
+    Deezer.get_oauth_token(app_id=DEEZER_APP_ID, app_secret=DEEZER_APP_SECRET, code=code)
+    ```
+
+- You now have your access token, and can use the SDK.
+
+# Using the sdk
+## Instantiate the Deezer object
+```bash
+dz = Deezer(app_id=DEEZER_APP_ID,
+                          app_secret=DEEZER_APP_SECRET,
+                          code=YOUR_URL_CODE,
+                          token=YOUR_ACCESS_TOKEN)
+```
+## Query the API
+### Get my playlists
+```bash
+dz.get_my_playlists()
+```
+Will return an array of Playlist objects witch contains the title of the playlist,
+ the url of the picture, and a boolean `is_loved_track` to True if it's your loved playlist
+
+### Play a music with the Deezer plugins
+```bash
+playlists = dz.get_my_playlists()
+url = dz.get_widget(playlist=playlists[0])
+```
+This will give an of the plugin loaded with your playlist. You can add the url in an iframe to display the plugin 
+or you can open it directly with :  
+```bash
+import webbrowser
+webbrowser.open(url)
+```
+You call also play a list of tracks
+```bash
+playlists = dz.get_my_playlists()
+url = dz.get_widget(tracks=tracks)
+```
+### Get your Flow
+```bash
+tracks = dz.get_flow()
+```
+### Get my favorites artists
+```bash
+artists = dz.get_my_favorite_artists()
+```
+### Methods on a Track
+```bash
+album = tack.get_album()
+artist = tack.get_artist()
+```
+### Methods on an Album
+```bash
+tracks = album.get_tracks()
+artist = album.get_artist()
+```
+### Methods on an Artist
+```bash
+tracks = artist.get_tracks()
+```
+
+
+
+
+
+
